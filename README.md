@@ -1,2 +1,14 @@
-# guiadopipetador.github.io
-O Guia é uma ferramenta interativa criada para ajudar cientistas a acompanharem o preenchimento de microplacas. Em experimentos com protocolos com pipetagens repetitivas é comum se perder ou esquecer quais poços foram preenchidos. Este modelo simula a placa real e permite marcar interativamente cada poço conforme ele é preenchido, evitando erros.
+# 🧪 Guia do Pipetador
+
+O **Guia do Pipetador** é uma ferramenta interativa criada para auxiliar pesquisadores e cientistas no preenchimento de placas de biologia molecular de **96 poços**.
+
+Durante experimentos como qPCR, é comum se perder no meio da pipetagem e esquecer quais poços já foram preenchidos. Esta ferramenta oferece uma simulação visual da placa, permitindo marcar cada poço à medida que for utilizado, evitando erros e melhorando a eficiência do experimento.
+
+---
+
+## 🔬 Funcionalidades
+
+- Simulação visual de uma **placa de 96 poços**
+- Marcação interativa dos poços já preenchidos
+- Interface simples, limpa e intuitiva
+- Pensado para uso durante a bancada, com tela sensível ao toque ou mouse
