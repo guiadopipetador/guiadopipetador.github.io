@@ -1351,84 +1351,7 @@
     </section>
 
     <script>
-        // Variável para controlar o Wake Lock
-        let wakeLock = null;
-
-        // Função para solicitar Wake Lock
-        async function requestWakeLock() {
-            try {
-                if ('wakeLock' in navigator) {
-                    wakeLock = await navigator.wakeLock.request('screen');
-                    console.log('Wake Lock ativado');
-                    
-                    wakeLock.addEventListener('release', () => {
-                        console.log('Wake Lock foi liberado');
-                    });
-                }
-            } catch (err) {
-                console.error(`${err.name}, ${err.message}`);
-            }
-        }
-
-        // Função para liberar Wake Lock
-        function releaseWakeLock() {
-            if (wakeLock !== null) {
-                wakeLock.release().then(() => {
-                    wakeLock = null;
-                    console.log('Wake Lock liberado');
-                });
-            }
-        }
-
-        // Verificar se há dados salvos no localStorage e restaurar a página
-        function restorePageState() {
-            const currentPage = localStorage.getItem('currentPage');
-            if (currentPage) {
-                document.getElementById('cover-section').style.display = 'none';
-                document.getElementById(currentPage).style.display = 'block';
-            }
-        }
-
-        // Salvar o estado da página
-        function savePageState(pageId) {
-            localStorage.setItem('currentPage', pageId);
-        }
-
-        // Salvar os poços marcados
-        function saveWellsState() {
-            const wells = document.querySelectorAll('.well');
-            const wellsState = {};
-            
-            wells.forEach(well => {
-                wellsState[well.id] = well.classList.contains('bg-[#0097b2]');
-            });
-            
-            localStorage.setItem('wellsState', JSON.stringify(wellsState));
-        }
-
-        // Restaurar os poços marcados
-        function restoreWellsState() {
-            const savedWells = localStorage.getItem('wellsState');
-            if (savedWells) {
-                const wellsState = JSON.parse(savedWells);
-                const wells = document.querySelectorAll('.well');
-                
-                wells.forEach(well => {
-                    if (wellsState[well.id]) {
-                        well.classList.remove('bg-[#f0f0f0]');
-                        well.classList.add('bg-[#0097b2]');
-                    }
-                });
-                
-                updateCounter();
-            }
-        }
-
         document.addEventListener('DOMContentLoaded', function() {
-            // Restaurar o estado da página e dos poços
-            restorePageState();
-            restoreWellsState();
-
             // Get all sections
             const coverSection = document.getElementById('cover-section');
             const appSection = document.getElementById('app-section');
@@ -1449,8 +1372,6 @@
                 appSection.style.display = 'block';
                 manualSection.style.display = 'none';
                 checklistSection.style.display = 'none';
-                savePageState('app-section');
-                requestWakeLock(); // Ativar Wake Lock quando entrar na página de poços
             });
             
             // Navigation to manual section
@@ -1459,8 +1380,6 @@
                 appSection.style.display = 'none';
                 manualSection.style.display = 'block';
                 checklistSection.style.display = 'none';
-                savePageState('manual-section');
-                releaseWakeLock(); // Liberar Wake Lock quando sair da página de poços
             });
             
             // Navigation to checklist section
@@ -1469,30 +1388,22 @@
                 appSection.style.display = 'none';
                 manualSection.style.display = 'none';
                 checklistSection.style.display = 'block';
-                savePageState('checklist-section');
-                releaseWakeLock(); // Liberar Wake Lock quando sair da página de poços
             });
             
             // Back buttons
             backBtnApp.addEventListener('click', function() {
                 appSection.style.display = 'none';
                 coverSection.style.display = 'flex';
-                savePageState('');
-                releaseWakeLock(); // Liberar Wake Lock quando voltar para a página inicial
             });
             
             backBtnManual.addEventListener('click', function() {
                 manualSection.style.display = 'none';
                 coverSection.style.display = 'flex';
-                savePageState('');
-                releaseWakeLock(); // Liberar Wake Lock quando voltar para a página inicial
             });
             
             backBtnChecklist.addEventListener('click', function() {
                 checklistSection.style.display = 'none';
                 coverSection.style.display = 'flex';
-                savePageState('');
-                releaseWakeLock(); // Liberar Wake Lock quando voltar para a página inicial
             });
             
             // Get all wells
@@ -1520,9 +1431,6 @@
                     
                     // Update counter
                     updateCounter();
-                    
-                    // Save wells state
-                    saveWellsState();
                 });
             });
             
@@ -1535,9 +1443,6 @@
                 
                 // Update counter
                 updateCounter();
-                
-                // Save wells state
-                saveWellsState();
             });
             
             // Checklist functionality
@@ -1553,20 +1458,6 @@
                         this.style.borderColor = '#0097b2';
                     }
                 });
-            });
-
-            // Ativar Wake Lock se a página de poços estiver aberta ao carregar
-            if (appSection.style.display === 'block') {
-                requestWakeLock();
-            }
-
-            // Lidar com a visibilidade da página para o Wake Lock
-            document.addEventListener('visibilitychange', () => {
-                if (document.visibilityState === 'visible' && appSection.style.display === 'block') {
-                    requestWakeLock();
-                } else {
-                    releaseWakeLock();
-                }
             });
         });
     </script>
@@ -1651,4 +1542,6 @@ document.addEventListener('DOMContentLoaded', function () {
 });
 </script>
 </body>
+
+
 </html>
