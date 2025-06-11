@@ -1351,116 +1351,58 @@
     </section>
 
     <script>
-        document.addEventListener('DOMContentLoaded', function() {
-            // Get all sections
-            const coverSection = document.getElementById('cover-section');
-            const appSection = document.getElementById('app-section');
-            const manualSection = document.getElementById('manual-section');
-            const checklistSection = document.getElementById('checklist-section');
-            
-            // Get all navigation buttons
-            const plateBtn = document.getElementById('plate-btn');
-            const manualBtn = document.getElementById('manual-btn');
-            const checklistBtn = document.getElementById('checklist-btn');
-            const backBtnApp = document.getElementById('back-btn-app');
-            const backBtnManual = document.getElementById('back-btn-manual');
-            const backBtnChecklist = document.getElementById('back-btn-checklist');
-            
-            // Navigation to app section
-            plateBtn.addEventListener('click', function() {
-                coverSection.style.display = 'none';
-                appSection.style.display = 'block';
-                manualSection.style.display = 'none';
-                checklistSection.style.display = 'none';
-            });
-            
-            // Navigation to manual section
-            manualBtn.addEventListener('click', function() {
-                coverSection.style.display = 'none';
-                appSection.style.display = 'none';
-                manualSection.style.display = 'block';
-                checklistSection.style.display = 'none';
-            });
-            
-            // Navigation to checklist section
-            checklistBtn.addEventListener('click', function() {
-                coverSection.style.display = 'none';
-                appSection.style.display = 'none';
-                manualSection.style.display = 'none';
-                checklistSection.style.display = 'block';
-            });
-            
-            // Back buttons
-            backBtnApp.addEventListener('click', function() {
-                appSection.style.display = 'none';
-                coverSection.style.display = 'flex';
-            });
-            
-            backBtnManual.addEventListener('click', function() {
-                manualSection.style.display = 'none';
-                coverSection.style.display = 'flex';
-            });
-            
-            backBtnChecklist.addEventListener('click', function() {
-                checklistSection.style.display = 'none';
-                coverSection.style.display = 'flex';
-            });
-            
-            // Get all wells
-            const wells = document.querySelectorAll('.well');
-            const resetBtn = document.getElementById('reset-btn');
-            const selectedCounter = document.getElementById('selected-counter');
-            
-            // Function to update counter
-            function updateCounter() {
-                const selectedWells = document.querySelectorAll('.bg-\\[\\#0097b2\\]').length;
-                selectedCounter.textContent = selectedWells;
-            }
-            
-            // Add click event to each well
-            wells.forEach(well => {
-                well.addEventListener('click', function() {
-                    // Toggle color
-                    if (this.classList.contains('bg-[#f0f0f0]')) {
-                        this.classList.remove('bg-[#f0f0f0]');
-                        this.classList.add('bg-[#0097b2]');
-                    } else {
-                        this.classList.remove('bg-[#0097b2]');
-                        this.classList.add('bg-[#f0f0f0]');
-                    }
-                    
-                    // Update counter
-                    updateCounter();
-                });
-            });
-            
-            // Reset button functionality
-            resetBtn.addEventListener('click', function() {
-                wells.forEach(well => {
-                    well.classList.remove('bg-[#0097b2]');
-                    well.classList.add('bg-[#f0f0f0]');
-                });
-                
-                // Update counter
-                updateCounter();
-            });
-            
-            // Checklist functionality
-            const checkboxes = document.querySelectorAll('.checklist-checkbox');
-            
-            checkboxes.forEach(checkbox => {
-                checkbox.addEventListener('change', function() {
-                    if (this.checked) {
-                        this.style.backgroundColor = '#4CAF50';
-                        this.style.borderColor = '#4CAF50';
-                    } else {
-                        this.style.backgroundColor = '';
-                        this.style.borderColor = '#0097b2';
-                    }
-                });
-            });
+ <script>
+document.addEventListener('DOMContentLoaded', function() {
+    const placa = document.getElementById('placa');
+    const resetBtn = document.getElementById('reset-btn');
+    const somClick = document.getElementById('somClick');
+    const somResetar = document.getElementById('somResetar');
+    const letras = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H'];
+    const STORAGE_KEY = 'placaqpcr_estado';
+
+    function carregarEstado() {
+        const estado = JSON.parse(localStorage.getItem(STORAGE_KEY)) || [];
+        estado.forEach(pos => {
+            const poco = document.querySelector(`.poco[data-pos="${pos}"]`);
+            if (poco) poco.classList.add('marcado');
         });
-    </script>
+    }
+
+    function salvarEstado() {
+        const estadoAtual = Array.from(document.querySelectorAll('.poco.marcado'))
+            .map(poco => poco.dataset.pos);
+        localStorage.setItem(STORAGE_KEY, JSON.stringify(estadoAtual));
+    }
+
+    // Cria os 96 poços
+    for (let linha = 0; linha < 8; linha++) {
+        for (let coluna = 1; coluna <= 12; coluna++) {
+            const poco = document.createElement('div');
+            poco.className = 'poco';
+            poco.dataset.pos = `${letras[linha]}${coluna}`;
+            poco.textContent = letras[linha] + coluna;
+
+            poco.addEventListener('click', function() {
+                this.classList.toggle('marcado');
+                salvarEstado(); // Salva imediatamente após clicar
+                somClick.currentTime = 0;
+                somClick.play();
+            });
+
+            placa.appendChild(poco);
+        }
+    }
+
+    resetBtn.addEventListener('click', function() {
+        document.querySelectorAll('.poco').forEach(p => p.classList.remove('marcado'));
+        localStorage.removeItem(STORAGE_KEY);
+        somResetar.currentTime = 0;
+        somResetar.play();
+    });
+
+    carregarEstado(); // Aplica o estado salvo após montar os poços
+});
+</script>
 
 <script>
 document.addEventListener('DOMContentLoaded', function () {
