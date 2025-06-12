@@ -12,3 +12,7 @@ Durante experimentos como qPCR, é comum se perder no meio da pipetagem e esquec
 - Marcação interativa dos poços já preenchidos
 - Interface simples, limpa e intuitiva
 - Pensado para uso durante a bancada, com tela sensível ao toque ou mouse
+
+---
+
+Acesse https://guiadopipetador.github.io/
